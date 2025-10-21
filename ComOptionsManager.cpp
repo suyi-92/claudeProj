@@ -365,6 +365,52 @@ int ComOptionsManager::loadFromFile(const std::string &filePath)
             else if (key == "consoleErrors2Stderr")
                 logFileOptions_.consoleErrors2Stderr_ = stringToBool(value);
         }
+        else if (currentSection == "ModelFileOptions")
+        {
+            if (key == "fileFormat")
+                modelFileOptions_.fileFormat_ = stringToModelFileFormat(value);
+            else if (key == "filePath")
+                modelFileOptions_.filePath_ = value;
+            else if (key == "fileName")
+                modelFileOptions_.fileName_ = value;
+            else if (key == "satMajorVersion")
+                modelFileOptions_.satVersion_.majorVersion_ = std::stoi(value);
+            else if (key == "satMinorVersion")
+                modelFileOptions_.satVersion_.minorVersion_ = std::stoi(value);
+        }
+        else if (currentSection == "AdaptiveMeshOptions")
+        {
+            if (key == "sampleSize")
+                meshGenerationOptions_.adaptiveMeshOptions_.sampleSize_ = std::stod(value);
+            else if (key == "curvatureAngle")
+                meshGenerationOptions_.adaptiveMeshOptions_.curvatureAngle_ = std::stod(value);
+            else if (key == "minSize")
+                meshGenerationOptions_.adaptiveMeshOptions_.minSize_ = std::stod(value);
+            else if (key == "maxSize")
+                meshGenerationOptions_.adaptiveMeshOptions_.maxSize_ = std::stod(value);
+            else if (key == "refinementFactor")
+                meshGenerationOptions_.adaptiveMeshOptions_.refinementFactor_ = std::stod(value);
+            else if (key == "ratioFactor")
+                meshGenerationOptions_.adaptiveMeshOptions_.ratioFactor_ = std::stod(value);
+            else if (key == "selfAdaption")
+                meshGenerationOptions_.adaptiveMeshOptions_.selfAdaption_ = std::stoi(value);
+            else if (key == "highCurvatureSampling")
+                meshGenerationOptions_.adaptiveMeshOptions_.highCurvatureSampling_ = std::stod(value);
+        }
+        else if (currentSection == "SurfMeshGenerationOptions")
+        {
+            if (key == "selfAdaption")
+                meshGenerationOptions_.surfMeshGenerationOptions_.selfAdaption_ = stringToBool(value);
+            else if (key == "meshOptimization")
+                meshGenerationOptions_.surfMeshGenerationOptions_.meshOptimization_ = stringToBool(value);
+            else if (key == "efficiency")
+                meshGenerationOptions_.surfMeshGenerationOptions_.efficiency_ = stringToBool(value);
+        }
+        else if (currentSection == "VolumMeshGenerationOptions")
+        {
+            if (key == "meshOptimization")
+                meshGenerationOptions_.volumMeshGenerationOptions_.meshOptimization_ = stringToBool(value);
+        }
     }
 
     file.close();
@@ -533,6 +579,39 @@ int ComOptionsManager::saveToFile(const std::string &filePath) const
     file << "mirror2Console = " << (logFileOptions_.mirror2Console_ ? "true" : "false") << "\n";
     file << "consoleErrors2Stderr = " << (logFileOptions_.consoleErrors2Stderr_ ? "true" : "false") << "\n";
 
+    // ModelFileOptions
+    file << "\n\n";
+    file << "=============================== ModelFileOptions ===============================\n";
+    file << "fileFormat = " << modelFileFormatToString(modelFileOptions_.fileFormat_) << "\n";
+    file << "filePath = " << modelFileOptions_.filePath_ << "\n";
+    file << "fileName = " << modelFileOptions_.fileName_ << "\n";
+    file << "satMajorVersion = " << modelFileOptions_.satVersion_.majorVersion_ << "\n";
+    file << "satMinorVersion = " << modelFileOptions_.satVersion_.minorVersion_ << "\n";
+
+    // AdaptiveMeshOptions
+    file << "\n\n";
+    file << "=============================== AdaptiveMeshOptions ===============================\n";
+    file << "sampleSize = " << meshGenerationOptions_.adaptiveMeshOptions_.sampleSize_ << "\n";
+    file << "curvatureAngle = " << meshGenerationOptions_.adaptiveMeshOptions_.curvatureAngle_ << "\n";
+    file << "minSize = " << meshGenerationOptions_.adaptiveMeshOptions_.minSize_ << "\n";
+    file << "maxSize = " << meshGenerationOptions_.adaptiveMeshOptions_.maxSize_ << "\n";
+    file << "refinementFactor = " << meshGenerationOptions_.adaptiveMeshOptions_.refinementFactor_ << "\n";
+    file << "ratioFactor = " << meshGenerationOptions_.adaptiveMeshOptions_.ratioFactor_ << "\n";
+    file << "selfAdaption = " << meshGenerationOptions_.adaptiveMeshOptions_.selfAdaption_ << "\n";
+    file << "highCurvatureSampling = " << meshGenerationOptions_.adaptiveMeshOptions_.highCurvatureSampling_ << "\n";
+
+    // SurfMeshGenerationOptions
+    file << "\n\n";
+    file << "=============================== SurfMeshGenerationOptions ===============================\n";
+    file << "selfAdaption = " << (meshGenerationOptions_.surfMeshGenerationOptions_.selfAdaption_ ? "true" : "false") << "\n";
+    file << "meshOptimization = " << (meshGenerationOptions_.surfMeshGenerationOptions_.meshOptimization_ ? "true" : "false") << "\n";
+    file << "efficiency = " << (meshGenerationOptions_.surfMeshGenerationOptions_.efficiency_ ? "true" : "false") << "\n";
+
+    // VolumMeshGenerationOptions
+    file << "\n\n";
+    file << "=============================== VolumMeshGenerationOptions ===============================\n";
+    file << "meshOptimization = " << (meshGenerationOptions_.volumMeshGenerationOptions_.meshOptimization_ ? "true" : "false") << "\n";
+
     file.close();
     return 0;
 }
@@ -566,6 +645,8 @@ void ComOptionsManager::printAllOptions() const
     printMeshMSHIOOptions();
     printMeshIOOptions();
     printLogFileOptions();
+    printModelFileOptions();
+    printMeshGenerationOptions();
 }
 
 void ComOptionsManager::printLineSearchOptions() const
@@ -726,6 +807,38 @@ void ComOptionsManager::printLogFileOptions() const
     std::cout << "consoleErrors2Stderr = " << (logFileOptions_.consoleErrors2Stderr_ ? "true" : "false") << "\n\n";
 }
 
+void ComOptionsManager::printModelFileOptions() const
+{
+    std::cout << "=============================== ModelFileOptions ===============================\n";
+    std::cout << "fileFormat = " << modelFileFormatToString(modelFileOptions_.fileFormat_) << "\n";
+    std::cout << "filePath = " << modelFileOptions_.filePath_ << "\n";
+    std::cout << "fileName = " << modelFileOptions_.fileName_ << "\n";
+    std::cout << "satMajorVersion = " << modelFileOptions_.satVersion_.majorVersion_ << "\n";
+    std::cout << "satMinorVersion = " << modelFileOptions_.satVersion_.minorVersion_ << "\n\n";
+}
+
+void ComOptionsManager::printMeshGenerationOptions() const
+{
+    std::cout << "=============================== MeshGenerationOptions ===============================\n";
+    std::cout << "\n--- AdaptiveMeshOptions ---\n";
+    std::cout << "sampleSize = " << meshGenerationOptions_.adaptiveMeshOptions_.sampleSize_ << "\n";
+    std::cout << "curvatureAngle = " << meshGenerationOptions_.adaptiveMeshOptions_.curvatureAngle_ << "\n";
+    std::cout << "minSize = " << meshGenerationOptions_.adaptiveMeshOptions_.minSize_ << "\n";
+    std::cout << "maxSize = " << meshGenerationOptions_.adaptiveMeshOptions_.maxSize_ << "\n";
+    std::cout << "refinementFactor = " << meshGenerationOptions_.adaptiveMeshOptions_.refinementFactor_ << "\n";
+    std::cout << "ratioFactor = " << meshGenerationOptions_.adaptiveMeshOptions_.ratioFactor_ << "\n";
+    std::cout << "selfAdaption = " << meshGenerationOptions_.adaptiveMeshOptions_.selfAdaption_ << "\n";
+    std::cout << "highCurvatureSampling = " << meshGenerationOptions_.adaptiveMeshOptions_.highCurvatureSampling_ << "\n";
+
+    std::cout << "\n--- SurfMeshGenerationOptions ---\n";
+    std::cout << "selfAdaption = " << (meshGenerationOptions_.surfMeshGenerationOptions_.selfAdaption_ ? "true" : "false") << "\n";
+    std::cout << "meshOptimization = " << (meshGenerationOptions_.surfMeshGenerationOptions_.meshOptimization_ ? "true" : "false") << "\n";
+    std::cout << "efficiency = " << (meshGenerationOptions_.surfMeshGenerationOptions_.efficiency_ ? "true" : "false") << "\n";
+
+    std::cout << "\n--- VolumMeshGenerationOptions ---\n";
+    std::cout << "meshOptimization = " << (meshGenerationOptions_.volumMeshGenerationOptions_.meshOptimization_ ? "true" : "false") << "\n\n";
+}
+
 void ComOptionsManager::resetToDefaults()
 {
     lineSearchOptions_ = LineSearchOptions{};
@@ -743,6 +856,8 @@ void ComOptionsManager::resetToDefaults()
     meshMSHIOOptions_ = MeshMSHIOOptions{};
     meshIOOptions_ = MeshIOOptions{};
     logFileOptions_ = LogFileOptions{};
+    modelFileOptions_ = ModelFileOptions{};
+    meshGenerationOptions_ = MeshGenerationOptions{};
 }
 
 std::string ComOptionsManager::lineSearchWayToString(LineSearchWay way) const
@@ -1216,4 +1331,26 @@ bool ComOptionsManager::stringToBool(const std::string &str) const
     for (auto &c : lowerStr)
         c = std::tolower(c);
     return (lowerStr == "true" || lowerStr == "1" || lowerStr == "yes" || lowerStr == "on");
+}
+
+std::string ComOptionsManager::modelFileFormatToString(ModelFileFormat format) const
+{
+    switch (format)
+    {
+    case ModelFileFormat::SAT:
+        return "SAT";
+    case ModelFileFormat::STEP:
+        return "STEP";
+    default:
+        return "UNKNOWN";
+    }
+}
+
+ModelFileFormat ComOptionsManager::stringToModelFileFormat(const std::string &str) const
+{
+    if (str == "SAT")
+        return ModelFileFormat::SAT;
+    if (str == "STEP")
+        return ModelFileFormat::STEP;
+    return ModelFileFormat::SAT;
 }
