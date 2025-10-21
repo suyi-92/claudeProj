@@ -184,6 +184,20 @@ public:
     /************************************************************************/
     void setLogFileOptions(const LogFileOptions &logOpts) { logFileOptions_ = logOpts; }
 
+    /************************************************************************
+    * 功能描述：设置模型文件选项
+    * 返回值：无
+    * 作者：邓龙威
+    /************************************************************************/
+    void setModelFileOptions(const ModelFileOptions &modelOpts) { modelFileOptions_ = modelOpts; }
+
+    /************************************************************************
+    * 功能描述：设置网格生成选项
+    * 返回值：无
+    * 作者：邓龙威
+    /************************************************************************/
+    void setMeshGenerationOptions(const MeshGenerationOptions &meshGenOpts) { meshGenerationOptions_ = meshGenOpts; }
+
     // =============================== 获取选项函数 ===============================
 
     /************************************************************************
@@ -290,6 +304,20 @@ public:
     * 作者：邓龙威
     /************************************************************************/
     const LogFileOptions &getLogFileOptions() const { return logFileOptions_; }
+
+    /************************************************************************
+    * 功能描述：获取模型文件选项
+    * 返回值：const ModelFileOptions& - 模型文件选项的常量引用
+    * 作者：邓龙威
+    /************************************************************************/
+    const ModelFileOptions &getModelFileOptions() const { return modelFileOptions_; }
+
+    /************************************************************************
+    * 功能描述：获取网格生成选项
+    * 返回值：const MeshGenerationOptions& - 网格生成选项的常量引用
+    * 作者：邓龙威
+    /************************************************************************/
+    const MeshGenerationOptions &getMeshGenerationOptions() const { return meshGenerationOptions_; }
 
     // =============================== 文件读写函数 ===============================
 
@@ -421,6 +449,20 @@ public:
     /************************************************************************/
     void printLogFileOptions() const;
 
+    /************************************************************************
+    * 功能描述：打印模型文件选项
+    * 返回值：无
+    * 作者：邓龙威
+    /************************************************************************/
+    void printModelFileOptions() const;
+
+    /************************************************************************
+    * 功能描述：打印网格生成选项
+    * 返回值：无
+    * 作者：邓龙威
+    /************************************************************************/
+    void printMeshGenerationOptions() const;
+
     // =============================== 重置函数 ===============================
 
     /************************************************************************
@@ -446,6 +488,7 @@ private:
     std::string logLevelToString(LogLevel level) const;
     std::string logFileFormatToString(LogFileFormat format) const;
     std::string logFileLanguageToString(LogFileLanguage lang) const;
+    std::string modelFileFormatToString(ModelFileFormat format) const;
 
     /************************************************************************
     * 功能描述：将字符串转换为枚举
@@ -462,6 +505,7 @@ private:
     LogLevel stringToLogLevel(const std::string &str) const;
     LogFileFormat stringToLogFileFormat(const std::string &str) const;
     LogFileLanguage stringToLogFileLanguage(const std::string &str) const;
+    ModelFileFormat stringToModelFileFormat(const std::string &str) const;
 
     /************************************************************************
     * 功能描述：字符串处理辅助函数
@@ -488,6 +532,8 @@ private:
     MeshMSHIOOptions meshMSHIOOptions_;
     MeshIOOptions meshIOOptions_;
     LogFileOptions logFileOptions_;
+    ModelFileOptions modelFileOptions_;
+    MeshGenerationOptions meshGenerationOptions_;
 
     // 当前质量级别
     MeshQualityLevel currentLevel_;
